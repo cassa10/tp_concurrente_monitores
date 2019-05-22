@@ -1,0 +1,38 @@
+ORDENA DEL BIT MENOS SIGNIFICATIVO AL MAS SIGNIFICATIVO
+
+radixSort: (ORDENA UNA LISTA DE BITS)
+
+3 -> 011
+7 -> 111
+4 -> 100
+5 -> 101
+6 -> 110
+
+=>
+
+100
+110
+011
+111
+101
+
+=>
+
+100
+101
+110
+011
+111
+
+=>
+
+011
+100
+101
+110
+111
+
+------
+1<<i
+Genera un binario de 32 bits que deja un 1 en la posicion i.
+

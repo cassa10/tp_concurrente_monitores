@@ -1,0 +1,96 @@
+//CLASE CONCURRENTE 21 MAYO 2019
+
+public class Contador {
+ int valor
+
+ public Contador(int valorInicial){
+  this.valor = valorInicial;
+ }
+
+ public synchronized void incrementar() {
+   valor++;
+ }
+
+ public synchronized void decrementar() {
+  valor--;
+ }
+
+ public synchronized int getValor(){
+   return this.valor;
+ }
+}
+
+public class ContadorUsuario extends Thread{
+
+ Contador miContador;
+ Barrera miBarrera;
+
+ public ContadorUsuario(Contador elContador,Barrera barrera) {
+   this.miContador = elContador;
+   this.miBarrera = barrera;
+ }
+
+ public void run(){
+  miContador.incrementar();
+  miBarrera.esperar();
+ }
+
+}
+
+//MONITORES MAIN
+
+public class MonitoresMain {
+
+ public static void main(String[] args){
+  
+  Contador miContador = new Contador(0);
+  Barrera laBarrera = new Barrera(4);
+  ContadorUsuario usu = new ContadorUsuario(miContador,laBarrera);
+  ContadorUsuario usu2 = new ContadorUsuario(miContador,laBarrera);
+  ContadorUsuario usu3 = new ContadorUsuario(miContador,laBarrera);
+  
+  usu.start();
+  usu2.start();
+  usu3.start();
+  
+  
+
+  /*
+    +Si ContadorUsuario extiende de Thread 
+
+      Thread usuT = new Thread(usu);
+      usuT.start();
+      
+      -Anda con usuT.start();
+      -Sin instanciar un Thread.
+   
+    //PARA PROBAR UN BREVE EXPERIMENTO ESTA BIEN PERO NO HACERLO
+    //Creacion de Threads de manera anonima:
+    +Thread usu = new Thread(){
+   	public void run() {
+		Contador cont = miContador; //miContador tiene que ser final Contador miContador;
+		cont.incrementar();  	
+	}
+     }
+  */
+  System.out.println("El valor es "+ miContador.getValor());
+ }
+}
+
+
+public class Barrera{
+  private int cupo;
+
+  public Barrera(int capacidad){
+    this.cupo = capacidad;
+  }
+
+  public synchronized void esperar(){
+	cupo--;
+	while(cupo != 0){
+	  try{wait();}catch(Exception e){}
+	}  
+	notifyAll();
+	
+  }
+}
