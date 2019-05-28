@@ -1,36 +1,36 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Buffer {
+public class Buffer<T> {
 
     //BUFFER DE INTEGER FIFO
 
-    private List<Integer> buffer = new ArrayList<Integer>();
-    private int size;
+    private List<T> buffer = new ArrayList<>();
+    private int sizeBuffer;
     private int positionWrite;
     private int positionRead;
 
 
     public Buffer(int sizeBuffer){
-        this.size = sizeBuffer;
+        this.sizeBuffer = sizeBuffer;
         this.positionRead = 0;
         this.positionWrite = 0;
     }
 
-    public synchronized void writeBuffer(int dato){
+    public synchronized void writeBuffer(T dato){
         while(existeDato(this.positionWrite)){
           try{wait();}catch (Exception e){}
         }
-
         this.buffer.set(this.positionWrite,dato);
         this.setNextPositionWrite();
         notifyAll();
     }
 
-    public synchronized int readBuffer(){
-        while(!existeDato(this.positionRead))
+    public synchronized T readBuffer(){
+        while(!existeDato(this.positionRead)){
             try{wait();}catch (Exception e){}
-        int dato = buffer.get(positionRead);
+        }
+        T dato = buffer.get(positionRead);
         buffer.set(positionRead,null);
         this.setNextPositionRead();
         notifyAll();
@@ -43,10 +43,10 @@ public class Buffer {
     }
 
     private void setNextPositionWrite(){
-        this.positionWrite = (positionWrite + 1) % size;
+        this.positionWrite = (positionWrite + 1) % sizeBuffer;
     }
 
     private void setNextPositionRead(){
-        this.positionRead = (positionRead + 1) % size;
+        this.positionRead = (positionRead + 1) % sizeBuffer;
     }
 }
