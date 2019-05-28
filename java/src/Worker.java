@@ -12,6 +12,6 @@ public class Worker<T> extends Thread {
 
     @Override
     public void run() {
-        //TAREA A REALIZAR
+        System.out.println(buffer.readBuffer());
     }
 }

@@ -3,50 +3,39 @@ import java.util.List;
 
 public class Buffer<T> {
 
-    //BUFFER DE INTEGER FIFO
+    //BUFFER GENERICO FIFO
 
-    private List<T> buffer = new ArrayList<>();
-    private int sizeBuffer;
-    private int positionWrite;
-    private int positionRead;
+    private List<T> buffer;
+    private int maxSizeBuffer;
+    private int actualSize;
 
-
-    public Buffer(int sizeBuffer){
-        this.sizeBuffer = sizeBuffer;
-        this.positionRead = 0;
-        this.positionWrite = 0;
+    public Buffer(int sizeBuffer) {
+        this.buffer = new ArrayList<>();
+        this.maxSizeBuffer = sizeBuffer;
+        this.actualSize = 0;
     }
 
-    public synchronized void writeBuffer(T dato){
-        while(existeDato(this.positionWrite)){
-          try{wait();}catch (Exception e){}
+    public synchronized void writeBuffer(T dato) {
+        while (this.isFull()) {
+            try { wait();} catch (Exception e) {}
         }
-        this.buffer.set(this.positionWrite,dato);
-        this.setNextPositionWrite();
+        this.buffer.add(dato);
+        this.actualSize++;
         notifyAll();
     }
 
-    public synchronized T readBuffer(){
-        while(!existeDato(this.positionRead)){
-            try{wait();}catch (Exception e){}
+    public synchronized T readBuffer() {
+        while (buffer.isEmpty()) {
+            try {wait();} catch(Exception e){}
         }
-        T dato = buffer.get(positionRead);
-        buffer.set(positionRead,null);
-        this.setNextPositionRead();
+        T dato = buffer.remove(0);
+        this.actualSize--;
         notifyAll();
-
         return dato;
     }
 
-    private boolean existeDato(int index){
-        return buffer.get(index) != null;
-    }
+    private boolean isFull() {
 
-    private void setNextPositionWrite(){
-        this.positionWrite = (positionWrite + 1) % sizeBuffer;
-    }
-
-    private void setNextPositionRead(){
-        this.positionRead = (positionRead + 1) % sizeBuffer;
+        return this.actualSize == this.maxSizeBuffer;
     }
 }
