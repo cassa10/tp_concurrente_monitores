@@ -12,7 +12,12 @@ public class Worker<T> extends Thread {
 
     @Override
     public void run() {
-        //BORRAR CUANDO SE PUEDA (SOLO TESTEO)
+        //TODO
+        // BORRAR CUANDO SE PUEDA (SOLO TESTEO)
         System.out.println(buffer.readBuffer());
+
+        //TODO
+        // while(true){buffer.readBuffer();}
+
     }
 }

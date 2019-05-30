@@ -1,33 +1,34 @@
 import java.util.List;
 
-public class ThreadPool<T> {
+public class ThreadPool {
 
 
-    private Buffer<T> buffer;
+    private Buffer<Task> buffer;
     private int cantidadWorkers;
-    private List<Worker<T>> workerList;
 
-    public ThreadPool(Buffer<T> buffer, int cantidadDeWorkers){
+    public ThreadPool(Buffer<Task> buffer, int cantidadDeWorkers){
 
         this.cantidadWorkers = cantidadDeWorkers;
         this.buffer = buffer;
 
-
-        //DEBERIA CREAR WORKERS
-        /*
-        for(int i=0;i<cantidadDeWorkers;i++) {
-            new Worker(buffer).start();
-        }
-        */
+        //TODO
+        // ¿DEBERIA CREAR WORKERS DE UNA?
+        // LOS CREA TODOS JUNTOS O DE A UNO POR UNO
+          /*
+          for(int i=0;i<cantidadDeWorkers;i++) {
+             new Worker<Task>(buffer).start();
+          }
+          */
     }
 
-    //NI IDEA SI ESTA BIEN
-    public synchronized void launch(){
-        //envia una tarea a un Worker ocioso encolandola en el buffer.
+    public synchronized void launch(Task tarea){
+        buffer.writeBuffer(tarea);
     }
 
     public synchronized  void stop(){
-
+        //TODO
+        // NOSE SI AGREGA SOLO UNA TAREA POISONPILL O AGREGA N THREADS
+        buffer.writeBuffer(new TaskPoisonPill());
     }
 
 

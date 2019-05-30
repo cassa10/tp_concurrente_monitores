@@ -18,9 +18,7 @@ public class Main {
         Worker<Integer> consumidor2 = new Worker<>(buffer);
 
         producer1.start();
-
-        consumidor1.start();
-        consumidor2.start();
+        producer2.start();
 
     }
 
