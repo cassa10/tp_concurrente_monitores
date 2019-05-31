@@ -1,20 +1,16 @@
-import java.util.List;
+public class Worker extends Thread {
 
-public class Worker<T> extends Thread {
+    private Buffer<Task> buffer;
 
-    private Buffer<T> buffer;
-
-    public Worker(Buffer<T> buffer){
-
+    public Worker(Buffer<Task> buffer){
         this.buffer = buffer;
-
     }
 
     @Override
     public void run() {
         //TODO
         // BORRAR CUANDO SE PUEDA (SOLO TESTEO)
-        System.out.println(buffer.readBuffer());
+        buffer.readBuffer().run();
 
         //TODO
         // while(true){buffer.readBuffer();}

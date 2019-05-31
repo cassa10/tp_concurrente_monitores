@@ -3,23 +3,26 @@ public class Main {
     public static void main(String[] args){
 
         //CREA EL BUFFER con un size especifico
-        Buffer<Integer> buffer = new Buffer<Integer>(2);
+        Buffer<Task> buffer = new Buffer<>(2);
 
-        //Cantidad de Workers
-        int cantidadThreads = 2;
+        ThreadPool threadPool = new ThreadPool(buffer,8);
 
-        //ThreadPool threadPool = new ThreadPool(buffer,cantidadThreads);
-        ProducerTest<Integer> producer1 = new ProducerTest<Integer>(buffer,1);
-        ProducerTest<Integer> producer2 = new ProducerTest<Integer>(buffer,3);
-        ProducerTest<Integer> producer3 = new ProducerTest<Integer>(buffer,5);
+        Task dummyTask = new TaskDummy("xD");
+        Task poisonPill = new TaskPoisonPill();
+
+        threadPool.launch(dummyTask);
 
 
-        Worker<Integer> consumidor1 = new Worker<>(buffer);
-        Worker<Integer> consumidor2 = new Worker<>(buffer);
+        threadPool.launch(dummyTask);
 
-        producer1.start();
-        producer2.start();
+        //EL STOP TIENE MENOR PRIORIDAD(PUEDE SER QUE ME COLEN LAUNCHS DESPUES DE USARLO)
+        threadPool.stop();
 
+        threadPool.launch(dummyTask);
+        threadPool.launch(dummyTask);
+        threadPool.launch(dummyTask);
+        threadPool.launch(dummyTask);
+        threadPool.launch(dummyTask);
     }
 
 }

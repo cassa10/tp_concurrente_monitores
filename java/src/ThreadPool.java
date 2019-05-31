@@ -1,35 +1,40 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class ThreadPool {
 
 
     private Buffer<Task> buffer;
-    private int cantidadWorkers;
+    private int workersNumber;
+    private List<Barrier> barriers;
 
-    public ThreadPool(Buffer<Task> buffer, int cantidadDeWorkers){
+    public ThreadPool(Buffer<Task> buffer, int workersNumber){
 
-        this.cantidadWorkers = cantidadDeWorkers;
+        this.workersNumber = workersNumber;
         this.buffer = buffer;
+        this.barriers = new ArrayList<>();
 
-        //TODO
-        // ¿DEBERIA CREAR WORKERS DE UNA?
-        // LOS CREA TODOS JUNTOS O DE A UNO POR UNO
-          /*
-          for(int i=0;i<cantidadDeWorkers;i++) {
-             new Worker<Task>(buffer).start();
-          }
-          */
+        for(int i=0;i<workersNumber;i++) {
+             new Worker(buffer).start();
+        }
     }
 
-    public synchronized void launch(Task tarea){
+    //NO USAR POISON PILL CON ESTE METODO YA QUE NO POSEE BARRERA
+    public void launch(Task tarea){
+        barriers.add(new Barrier(1));
         buffer.writeBuffer(tarea);
     }
 
-    public synchronized  void stop(){
+    public void stop(){
         //TODO
-        // NOSE SI AGREGA SOLO UNA TAREA POISONPILL O AGREGA N THREADS
+        // NOSE SI AGREGA SOLO UNA TAREA POISONPILL
+        // TIENE QUE IR UNA BARRERA? PARA QUE TERMINEN TODOS LOS WORKERS ANTES DE PONER LA POSION
+
+        barriers.forEach(b -> b.esperar());
         buffer.writeBuffer(new TaskPoisonPill());
     }
 
+    //TODO
+    //  PROBLEMA DEL BARRIER EL LAUNCH() TIENE PRIORIDAD ANTE EL STOP().
 
 }

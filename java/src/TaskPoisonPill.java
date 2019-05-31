@@ -5,5 +5,8 @@ public class TaskPoisonPill extends Task {
       //TODO
       // NO SE COMO MANEJAR LA EXCEPCION POISONPILL
       // ¿¿PUEDE SER QUE NO SEA NECESARIO LANZAR EXCEPCION??
+
+        //PARA TESTIAR LE PONGO UN PRINT
+        System.out.println("PoisonPill");
     }
 }
