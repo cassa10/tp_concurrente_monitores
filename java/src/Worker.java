@@ -8,12 +8,13 @@ public class Worker extends Thread {
 
     @Override
     public void run() {
-        //TODO
-        // BORRAR CUANDO SE PUEDA (SOLO TESTEO)
-        buffer.readBuffer().run();
-
-        //TODO
-        // while(true){buffer.readBuffer();}
-
+        while(true){
+            try {
+                buffer.readBuffer().run();
+            }catch (PoisonException e){
+                System.out.println("Me mori thread con ID: " + this.getId());
+                break;
+            }
+        }
     }
 }

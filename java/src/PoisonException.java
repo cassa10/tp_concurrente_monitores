@@ -1,10 +1,7 @@
-public class PoisonException extends Exception {
-
-    //TODO
-    // NOSE SI ES NECESARIO ESTA EXCEPCION
+public class PoisonException extends RuntimeException {
 
     public PoisonException(){
-        super("PoisonPill en el buffer");
+        super("I am a PoisonPill Exception");
     }
 
 }
