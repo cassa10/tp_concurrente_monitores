@@ -13,15 +13,13 @@ public class ThreadPool {
         }
     }
 
-    //NO USAR POISON PILL CON ESTE METODO YA QUE NO POSEE BARRERA
-    public synchronized void launch(Task tarea) {
+    public void launch(Task tarea) {
         if(this.workersNumber > 0){
             buffer.writeBuffer(tarea);
         }
-
     }
 
-    public synchronized void stop() {
+    public void stop() {
         for(int i=0;i<this.workersNumber;i++){
             buffer.writeBuffer(new TaskPoisonPill());
         }
