@@ -1,44 +1,35 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Main {
 
     public static void main(String[] args){
 
-        ThreadPool threadPool = new ThreadPool(2,8);
-
-        Task dummyTask = new TaskDummy("xD");
-
-        threadPool.launch(dummyTask);
-        threadPool.launch(dummyTask);
-
-        //EL STOP TIENE MENOR PRIORIDAD(PUEDE SER QUE ME COLEN LAUNCHS DESPUES DE USARLO)
-        threadPool.stop();
-
-        //NO HACEN NADA DESPUES DEL STOP
-        threadPool.launch(dummyTask);
-        threadPool.launch(dummyTask);
-        threadPool.launch(dummyTask);
-        threadPool.launch(dummyTask);
-        threadPool.launch(dummyTask);
-
-
         List<Integer> listaDePrueba = new ArrayList<>();
-        listaDePrueba.add(3);
-        listaDePrueba.add(12);
+
         listaDePrueba.add(2);
-        listaDePrueba.add(100);
-        listaDePrueba.add(1);
+        listaDePrueba.add(8);
+        listaDePrueba.add(16);
         listaDePrueba.add(5);
+        listaDePrueba.add(12);
+
+        /*
+        for(int i=1; i<21;i++){
+            listaDePrueba.add(new Random().nextInt(i));
+        }*/
 
         //TODO
         // BORRAR PRINTS
         System.out.println("Lista sin ordenar "+ listaDePrueba);
 
 
-        ConcurRadixSort radixSort = new ConcurRadixSort(0);
+
+        ConcurRadixSort radixSort = new ConcurRadixSort(3);
+
         listaDePrueba = radixSort.radixSort(listaDePrueba);
-        System.out.println("Print lista ordenada: "+listaDePrueba);
+        // listaDePrueba = radixSort.concurRadixSort(listaDePrueba);
+        System.out.println("Lista ordenada: "+listaDePrueba);
     }
 
 }
