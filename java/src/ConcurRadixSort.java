@@ -38,14 +38,14 @@ public class ConcurRadixSort {
                 System.out.println("Iteracion "+i+":"+listasAuxThreads);
 
                 for (List<Integer> auxThreads : listasAuxThreads) {
-                    auxResultThread = this.split(auxThreads, i);//ESTO SE MANDA EN EL LAUNCH
+                    auxResultThread = this.split(auxThreads, i);//ESTO SE MANDA EN EL LAUNCH COMO TASK
                     //TODO
                     // ESTO DEBERIA TENERLO EL THREADPOOL Y QUE LOS WORKERS SE ORDENEN
                     // PARA ESCRIBIR EN ALLONES Y ALLZEROS EN FORMA QUE FUERON RECIBIENDO LOS LAUNCH
                     // PORQUE PUEDE HABER UN DESORDEN EN LA LISTA
                     // Y EL ALGORITMO NO ORDENA
-                    allOnes.addAll(auxResultThread.get(0));
-                    allZeros.addAll(auxResultThread.get(1));
+                    allOnes.addAll(auxResultThread.get(0)); //WORKERS ESCRIBEN EN ALGUN LADO EL RESULTADO ONES
+                    allZeros.addAll(auxResultThread.get(1));//WORKERS ESCRIBEN EN ALGUN LADO EL RESULTADO ZEROS
 
                 }
 
@@ -55,6 +55,8 @@ public class ConcurRadixSort {
                 allOnes = new ArrayList<>();
                 allZeros = new ArrayList<>();
 
+                //ACA TIENE Q EXISTIR UNA BARRERA DE QUE LAS LISTAS SE VAN PONIENDO EN ORDEN HASTA Q SE PONGAN TODAS
+
                 resultList = auxResult.get(0);
                 resultList.addAll(auxResult.get(1));
 
@@ -62,6 +64,7 @@ public class ConcurRadixSort {
 
             }
         }
+        //ACA MATAR A TODOS LOS THREADS CON STOP
         return resultList ;
     }
 
