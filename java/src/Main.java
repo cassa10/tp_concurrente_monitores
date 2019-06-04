@@ -11,7 +11,7 @@ public class Main {
         int numberThreads = 4;
         ConcurRadixSort radixSort = new ConcurRadixSort(numberThreads);
 
-        for(int i=1; i<10000001;i++){
+        for(int i=1; i<1001;i++){
             testList.add(new Random().nextInt(i));
         }
 
