@@ -12,7 +12,8 @@ public class Worker extends Thread {
             try {
                 buffer.readBuffer().run();
             }catch (PoisonException e){
-                System.out.println("Me mori thread con ID: " + this.getId());
+                //PRINT TEST
+                //System.out.println("Thread died with ID: " + this.getId());
                 break;
             }
         }
