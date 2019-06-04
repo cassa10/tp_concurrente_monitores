@@ -13,16 +13,23 @@ public class ThreadPool {
         }
     }
 
-    public void launch(Task tarea) {
-        if(this.workersNumber > 0){
-            buffer.writeBuffer(tarea);
+    public ThreadPool(int workersNumber) {
+
+        this.workersNumber = workersNumber;
+        this.buffer = new Buffer<>(workersNumber);
+
+        for (int i = 0; i < workersNumber; i++) {
+            new Worker(buffer).start();
         }
+    }
+
+    public void launch(Task tarea) {
+        buffer.writeBuffer(tarea);
     }
 
     public void stop() {
         for(int i=0;i<this.workersNumber;i++){
             buffer.writeBuffer(new TaskPoisonPill());
         }
-        this.workersNumber = 0;
     }
 }

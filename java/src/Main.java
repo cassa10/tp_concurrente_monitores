@@ -1,3 +1,4 @@
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -6,30 +7,19 @@ public class Main {
 
     public static void main(String[] args){
 
-        List<Integer> listaDePrueba = new ArrayList<>();
+        List<Integer> testList = new ArrayList<>();
+        int numberThreads = 4;
+        ConcurRadixSort radixSort = new ConcurRadixSort(numberThreads);
 
-        listaDePrueba.add(2);
-        listaDePrueba.add(8);
-        listaDePrueba.add(16);
-        listaDePrueba.add(5);
-        listaDePrueba.add(12);
+        for(int i=1; i<10000001;i++){
+            testList.add(new Random().nextInt(i));
+        }
 
-        /*
-        for(int i=1; i<21;i++){
-            listaDePrueba.add(new Random().nextInt(i));
-        }*/
+        System.out.println("Lista sin ordenar "+ testList);
 
-        //TODO
-        // BORRAR PRINTS
-        System.out.println("Lista sin ordenar "+ listaDePrueba);
+        testList = radixSort.concurRadixSort(testList);
 
-
-
-        ConcurRadixSort radixSort = new ConcurRadixSort(3);
-
-        listaDePrueba = radixSort.radixSort(listaDePrueba);
-        // listaDePrueba = radixSort.concurRadixSort(listaDePrueba);
-        System.out.println("Lista ordenada: "+listaDePrueba);
+        System.out.println("Lista ordenada: "+ testList);
     }
 
 }

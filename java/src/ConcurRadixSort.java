@@ -4,67 +4,75 @@ import java.util.List;
 public class ConcurRadixSort {
     //DO NOT RUN WITH NEGATIVE INTEGERS
 
-
-    //TODO
-    // -BORRAR TODOS LOS PRINTS DE ESTA CLASE
-    // -AGREGAR CONCURRENCIA REAL (INSTANCIAR THREADPOOL Y WORKERS) Y UTILIZAR LAUNCH Y STOP
-
     private ThreadPool threadPool;
-    private int cantidadThreads;
+    private int numberThreads;
 
-    public ConcurRadixSort(int cantidadThreads){
-        //this.threadPool = new ThreadPool(cantidadThreads,cantidadThreads);
-        this.cantidadThreads = cantidadThreads;
+    public ConcurRadixSort(int numberThreads){
+        this.threadPool = new ThreadPool(numberThreads);
+        this.numberThreads = numberThreads;
     }
 
     public List<Integer> concurRadixSort (List<Integer> list){
         List<Integer> resultList = list;
 
-        if(this.cantidadThreads <= 1){
+        if(this.numberThreads <= 0){
             resultList = this.radixSort(list);
         }else {
             List<List<Integer>> auxResult = new ArrayList<>();
-            List<List<Integer>> auxResultThread;
+
+            List<Integer> allOnes = new ArrayList<>();
+            List<Integer> allZeros = new ArrayList<>();
 
             int sizeList = list.size();
 
             List<List<Integer>> listasAuxThreads;
 
-            List<Integer> allOnes = new ArrayList<>();
-            List<Integer> allZeros = new ArrayList<>();
+            List<RadixResults> resultsThreads;
+
+            int writeInResult;
+
+            int numberOfTasks;
+            Barrier barrier;
 
             for (int i = 0; i < 32; ++i) {
-                listasAuxThreads = this.divList(cantidadThreads, resultList, sizeList);
-                System.out.println("Iteracion "+i+":"+listasAuxThreads);
+                listasAuxThreads = this.divList(numberThreads, resultList, sizeList);
+                numberOfTasks = listasAuxThreads.size();
+
+                resultsThreads = this.createResultList(numberOfTasks);
+
+                writeInResult = 0;
+
+                //SUPONGO QUE SE DEBEN COMPLETAR ESTAS TAREAS
+                barrier = new Barrier(numberOfTasks);
 
                 for (List<Integer> auxThreads : listasAuxThreads) {
-                    auxResultThread = this.split(auxThreads, i);//ESTO SE MANDA EN EL LAUNCH COMO TASK
-                    //TODO
-                    // ESTO DEBERIA TENERLO EL THREADPOOL Y QUE LOS WORKERS SE ORDENEN
-                    // PARA ESCRIBIR EN ALLONES Y ALLZEROS EN FORMA QUE FUERON RECIBIENDO LOS LAUNCH
-                    // PORQUE PUEDE HABER UN DESORDEN EN LA LISTA
-                    // Y EL ALGORITMO NO ORDENA
-                    allOnes.addAll(auxResultThread.get(0)); //WORKERS ESCRIBEN EN ALGUN LADO EL RESULTADO ONES
-                    allZeros.addAll(auxResultThread.get(1));//WORKERS ESCRIBEN EN ALGUN LADO EL RESULTADO ZEROS
 
+                    threadPool.launch(new TaskRadixSort(barrier,resultsThreads,writeInResult,i,auxThreads));
+
+                    writeInResult++;
+                }
+
+                barrier.esperar();
+
+                for(RadixResults thRs : resultsThreads){
+                    allOnes.addAll(thRs.getOnes());
+                    allZeros.addAll(thRs.getZeros());
                 }
 
                 auxResult.add(allOnes);
                 auxResult.add(allZeros);
-
-                allOnes = new ArrayList<>();
-                allZeros = new ArrayList<>();
-
-                //ACA TIENE Q EXISTIR UNA BARRERA DE QUE LAS LISTAS SE VAN PONIENDO EN ORDEN HASTA Q SE PONGAN TODAS
 
                 resultList = auxResult.get(0);
                 resultList.addAll(auxResult.get(1));
 
                 auxResult = new ArrayList<>();
 
+                allOnes = new ArrayList<>();
+                allZeros = new ArrayList<>();
+
             }
         }
-        //ACA MATAR A TODOS LOS THREADS CON STOP
+        this.threadPool.stop();
         return resultList ;
     }
 
@@ -134,5 +142,13 @@ public class ConcurRadixSort {
         result.add(list.subList(lastIndexTook,sizeList));
 
         return result;
+    }
+
+    private List<RadixResults> createResultList(int sizeResultList){
+        List<RadixResults> list = new ArrayList<>();
+        for(int i=0;i<sizeResultList;i++){
+            list.add(null);
+        }
+        return list;
     }
 }
