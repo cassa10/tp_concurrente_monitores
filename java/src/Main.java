@@ -6,25 +6,33 @@ public class Main {
 
     public static void main(String[] args){
 
-        long startTime = System.currentTimeMillis();
+        long startTime;
+        long endTime;
+        long time;
 
         List<Integer> testList = new ArrayList<>();
-        int numberThreads = 1;
+        int numberThreads = 3;
         ConcurRadixSort radixSort = new ConcurRadixSort(numberThreads);
 
         for(int i=1; i<1001;i++){
             testList.add(new Random().nextInt(i));
         }
+        System.out.println("No Sorted List"+ testList);
 
-        //System.out.println("No Sorted List"+ testList);
+        //ME GUARDO EL TIEMPO CUANDO EMPEZO
+        startTime = System.currentTimeMillis();
+
 
         testList = radixSort.concurRadixSort(testList);
 
-        //System.out.println("Sorted List: "+ testList);
 
-        long engTime = System.currentTimeMillis();
+        //ME GUARDO EL TIEMPO CUANDO FINALIZO
+        endTime = System.currentTimeMillis();
 
-        long time = engTime - startTime;
+        //CALCULO DEL TIEMPO
+        time = endTime - startTime;
+
+        System.out.println("Sorted List" + testList);
         System.out.println("Execution Time(ms): "+ time + "ms");
     }
 
